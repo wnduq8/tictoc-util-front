@@ -1,6 +1,8 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
+import { useCheckPrivacy } from '@hooks/useCheckPrivacy'
 
 export default function PrivacyRoot() {
-  return <Outlet />
+  const { isRender } = useCheckPrivacy()
+  return isRender ? <Outlet /> : null
 }

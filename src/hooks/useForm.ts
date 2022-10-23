@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { validate } from '@lib/validate'
 
 interface FormInputConfig {
   name?: string

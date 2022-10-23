@@ -12,8 +12,11 @@ import {
   InputGroup,
   Line,
   StyledForm,
-} from '@components/auth/AuthStylesComponents'
+} from '@components/auth/StylesComponents'
 import { useNavigate } from 'react-router-dom'
+import { useEmailMutation } from '@hooks/mutation/useEmailMutation'
+import Cookies from 'js-cookie'
+import { JWT_NAME } from '@lib/constants'
 
 interface AuthFormProps {}
 
@@ -27,6 +30,16 @@ const authDescriptions = {
 
 function AuthForm({}: AuthFormProps) {
   const navigate = useNavigate()
+  const {
+    mutateAsync: loginMutate,
+    isLoading,
+    isError,
+  } = useEmailMutation({
+    onSuccess(data) {
+      Cookies.set(JWT_NAME, data.data.token)
+      navigate('/')
+    },
+  })
   const { emailPlaceholder, passwordPlaceholder, buttonText } = authDescriptions['login']
 
   const { inputProps, handleSubmit, errors } = useForm({
@@ -43,11 +56,15 @@ function AuthForm({}: AuthFormProps) {
     mode: 'all',
   })
 
-  const onSubmit = handleSubmit((formDataJSON, e) => {
-    console.log(formDataJSON)
-    navigate('/')
-  })
+  const onSubmit = handleSubmit(async (formDataJSON, e) => {
+    const params = {
+      email: formDataJSON.tictocEmail,
+      password: formDataJSON.password,
+      isGoogle: false,
+    }
 
+    await loginMutate(params)
+  })
   return (
     <StyledForm method="post" onSubmit={onSubmit}>
       <DesktopLogo>
@@ -57,7 +74,7 @@ function AuthForm({}: AuthFormProps) {
         <LabelInput
           label="이메일"
           placeholder={emailPlaceholder}
-          disabled={false}
+          disabled={isLoading}
           errorMessage={errors.tictocEmail}
           {...inputProps.tictocEmail}
         />
@@ -65,15 +82,15 @@ function AuthForm({}: AuthFormProps) {
           label="비밀번호"
           name="password"
           placeholder={passwordPlaceholder}
-          disabled={false}
+          disabled={isLoading}
           type="password"
           errorMessage={errors.password}
           {...inputProps.password}
         />
       </InputGroup>
       <ActionsBox>
-        {/*<ActionErrorMessage>잘못된 계정 정보입니다.</ActionErrorMessage>*/}
-        <Button type="submit" layoutMode="fullWidth" disabled={false}>
+        {isError && <ActionErrorMessage>잘못된 계정 정보입니다.</ActionErrorMessage>}
+        <Button type="submit" layoutMode="fullWidth" disabled={isLoading}>
           {buttonText}
         </Button>
         <Line />

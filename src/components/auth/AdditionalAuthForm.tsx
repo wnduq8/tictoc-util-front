@@ -5,13 +5,9 @@ import LabelInput from '@components/system/LabelInput'
 import Button from '@components/system/Button'
 import { useForm } from '@hooks/useForm'
 import { validate } from '@lib/validate'
-import {
-  ActionErrorMessage,
-  ActionsBox,
-  DesktopLogo,
-  InputGroup,
-  StyledForm,
-} from '@components/auth/AuthStylesComponents'
+import { ActionErrorMessage, ActionsBox, DesktopLogo, InputGroup, StyledForm } from '@components/auth/StylesComponents'
+import { useUserState } from '@src/atoms/userState'
+import { useAdditionalMutation } from '@hooks/mutation/useAdditionalMutation'
 
 const authDescriptions = {
   additional: {
@@ -26,7 +22,18 @@ interface AuthFormProps {}
 
 function AdditionalAuthForm({}: AuthFormProps) {
   const navigate = useNavigate()
-  const { namePlaceholder, departmentPlaceholder, phonePlaceholder, buttonText } = authDescriptions['additional']
+  const [userState] = useUserState()
+  const {
+    mutateAsync: additionalMutate,
+    isLoading,
+    isError,
+  } = useAdditionalMutation({
+    onSuccess() {
+      navigate('/')
+    },
+  })
+
+  const { namePlaceholder, departmentPlaceholder, buttonText } = authDescriptions['additional']
 
   const { inputProps, handleSubmit, errors } = useForm({
     form: {
@@ -42,9 +49,12 @@ function AdditionalAuthForm({}: AuthFormProps) {
     mode: 'all',
   })
 
-  const onSubmit = handleSubmit((formDataJSON, e) => {
-    console.log(formDataJSON)
-    navigate('/')
+  const onSubmit = handleSubmit(async (formDataJSON, e) => {
+    const params = {
+      ...formDataJSON,
+      id: userState?.id!,
+    }
+    await additionalMutate(params)
   })
 
   return (
@@ -56,21 +66,21 @@ function AdditionalAuthForm({}: AuthFormProps) {
         <LabelInput
           label="이름"
           placeholder={namePlaceholder}
-          disabled={false}
+          disabled={isLoading}
           errorMessage={errors.name}
           {...inputProps.name}
         />
         <LabelInput
           label="부서"
           placeholder={departmentPlaceholder}
-          disabled={false}
+          disabled={isLoading}
           errorMessage={errors.department}
           {...inputProps.department}
         />
       </InputGroup>
       <ActionsBox>
-        {/*<ActionErrorMessage>잘못된 계정 정보입니다.</ActionErrorMessage>*/}
-        <Button type="submit" layoutMode="fullWidth" disabled={false}>
+        {isError && <ActionErrorMessage>서버 처리에 이상이 있습니다. 관리자에게 문의해주세요.</ActionErrorMessage>}
+        <Button type="submit" layoutMode="fullWidth" disabled={isLoading}>
           {buttonText}
         </Button>
       </ActionsBox>

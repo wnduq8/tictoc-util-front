@@ -1,14 +1,28 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { JWT_NAME } from '@lib/constants'
 
 const client = axios.create({
   withCredentials: true,
   baseURL: process.env.REACT_APP_API_SERVER || 'http://localhost:8080',
   headers: {
-    Authorization: `Bearer ${Cookies.get('Tct') ?? ''}`,
     'Content-Type': 'application/json',
   },
 })
+
+client.interceptors.request.use(
+  async (config) => {
+    const jwt = Cookies.get(JWT_NAME) || ''
+
+    config.headers = {
+      Authorization: `Bearer ${jwt}`,
+    }
+    return config
+  },
+  (error) => {
+    Promise.reject(error)
+  },
+)
 
 client.interceptors.response.use(
   (response) => {
@@ -17,8 +31,9 @@ client.interceptors.response.use(
   async function (error) {
     const originalRequest = error.config
     if (error.response.status === 401 && !originalRequest._retry) {
-      Cookies.remove('Tct')
-      return null
+      Cookies.remove(JWT_NAME)
+      window.location.href = '/login'
+      return
     }
     return Promise.reject(error)
   },
