@@ -40,6 +40,11 @@ const Content = styled.div`
   flex-direction: column;
   flex: 1;
   overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export default TabLayout

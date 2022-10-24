@@ -5,7 +5,7 @@ import FooterTabItem from './FooterTabItem'
 function Footer() {
   return (
     <StyledFooter>
-      <FooterTabItem icon="home" to="/" />
+      <FooterTabItem icon="calendar" to="/" />
       <FooterTabItem icon="setting" to="/setting" />
     </StyledFooter>
   )
@@ -13,7 +13,7 @@ function Footer() {
 
 const StyledFooter = styled.footer`
   height: 56px;
-  border-top: 1px solid grey;
+  border-top: 1px solid ${({ theme }) => theme.color.gray0};
   display: flex;
   ${media.mobile} {
     display: none;

@@ -14,6 +14,8 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { theme } from '@lib/styles/theme'
 import { useThemeState } from '@src/atoms/themeState'
 import GlobalCenterPopup from '@components/base/GlobalCenterPopup'
+import SettingIndex from '@src/pages/Setting'
+import Account from '@src/pages/Setting/account'
 
 const router = createBrowserRouter([
   {
@@ -23,6 +25,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: '/additional-info', element: <AdditionalInfo /> },
+      { path: '/setting', element: <SettingIndex /> },
+      { path: '/setting/account', element: <Account /> },
     ],
   },
   {

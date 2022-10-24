@@ -43,10 +43,7 @@ export const ActionsBox = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 24px;
-
-  ${media.mobile} {
-    margin-top: 24px;
-  }
+  margin-top: 24px;
 `
 
 export const ActionErrorMessage = styled.div`

@@ -3,16 +3,16 @@ import styled from 'styled-components'
 import { media } from '@lib/styles/media'
 import { Logo } from '../vectors'
 import UserAddon from './UserAddon'
+import { useUserState } from '@src/atoms/userState'
 
 function DesktopHeader() {
+  const [userState] = useUserState()
   return (
     <Block>
       <HomeLink to="/">
         <StyledLogo />
       </HomeLink>
-      <Content>
-        <UserAddon username={'박주엽'} />
-      </Content>
+      <Content>{userState && <UserAddon username={userState.name} profileImage={userState.profileImage} />}</Content>
     </Block>
   )
 }
@@ -38,8 +38,9 @@ const StyledLogo = styled(Logo)`
 const Content = styled.div`
   flex: 1;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+  cursor: pointer;
 `
 
 const HomeLink = styled(Link)`

@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom'
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { Home, Setting } from '../vectors'
+import { Calendar, Setting } from '../vectors'
 
 const iconMap = {
-  home: Home,
+  calendar: Calendar,
   setting: Setting,
 }
 
@@ -34,13 +34,13 @@ const sharedStyle = css`
   align-items: center;
   justify-content: center;
   svg {
-    color: grey;
+    color: ${({ theme }) => theme.color.gray2};
     width: 32px;
     height: 32px;
   }
   &:active {
     svg {
-      color: yellow;
+      color: ${({ theme }) => theme.color.primary};
     }
   }
 `
@@ -49,7 +49,7 @@ const LinkItem = styled(NavLink)`
   ${sharedStyle}
   &.active {
     svg {
-      color: yellow;
+      color: ${({ theme }) => theme.color.primary};
     }
   }
 `
