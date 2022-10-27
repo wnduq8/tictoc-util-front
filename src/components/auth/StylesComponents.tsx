@@ -5,10 +5,9 @@ import { media } from '@lib/styles/media'
 export const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  flex: 1;
-
   justify-content: space-between;
+  flex: 1;
+  padding: 16px;
 
   ${media.mobile} {
     justify-content: center;

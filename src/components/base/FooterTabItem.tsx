@@ -1,5 +1,5 @@
-import { NavLink } from 'react-router-dom'
-import React from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { Calendar, Setting } from '../vectors'
 
@@ -14,15 +14,20 @@ interface Props {
 }
 
 function FooterTabItem({ icon, to }: Props) {
+  const [activeColor, setActiveColor] = useState<string>('')
+  const { pathname } = useLocation()
   const iconEl = React.createElement(iconMap[icon])
+
+  useEffect(() => {
+    if (to === '/') {
+      setActiveColor(to === pathname ? 'active_color' : '')
+      return
+    }
+    setActiveColor(pathname.startsWith(to) ? 'active_color' : '')
+  }, [])
+
   return (
-    <LinkItem
-      to={to}
-      className={({ isActive }) => {
-        if (isActive) return 'active'
-        return ''
-      }}
-    >
+    <LinkItem to={to} className={activeColor}>
       {iconEl}
     </LinkItem>
   )
@@ -38,16 +43,11 @@ const sharedStyle = css`
     width: 32px;
     height: 32px;
   }
-  &:active {
-    svg {
-      color: ${({ theme }) => theme.color.primary};
-    }
-  }
 `
 
 const LinkItem = styled(NavLink)`
   ${sharedStyle}
-  &.active {
+  &.active_color {
     svg {
       color: ${({ theme }) => theme.color.primary};
     }
