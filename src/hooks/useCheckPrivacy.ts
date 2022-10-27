@@ -21,11 +21,7 @@ export function useCheckPrivacy() {
     getUserInfo()
       .then((response) => {
         if (response.statusCode === 200) {
-          const user = {
-            ...response.data,
-            id: parseInt(response.data.id as unknown as string, 10),
-          }
-          setUserState(user)
+          setUserState(response.data)
           setIsRender(true)
         }
       })

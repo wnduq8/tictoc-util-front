@@ -1,5 +1,6 @@
 import client from '../client'
 import { CommonResponseType } from '@lib/type'
+import { CommonResult } from '@lib/api/type'
 
 export async function getUserInfo() {
   const response = await client.get<CommonResponseType<UserResult>>('/users/user')
@@ -7,11 +8,7 @@ export async function getUserInfo() {
   return response.data
 }
 
-export interface UserResult {
-  id: number
-  createAt: string
-  updatedAt?: string
-  deletedAt?: string
+export interface UserResult extends CommonResult {
   email: string
   name: string
   phone?: string

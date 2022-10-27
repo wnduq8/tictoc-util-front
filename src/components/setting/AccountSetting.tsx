@@ -68,7 +68,7 @@ function AccountSetting() {
 const Title = styled.h1`
   margin-top: 0;
   margin-bottom: 32px;
-  font-weight: 800;
+  font-weight: 700;
   color: ${({ theme }) => theme.color.gray5};
   font-size: 48px;
   line-height: 1.5;

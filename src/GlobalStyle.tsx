@@ -9,7 +9,6 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: inherit;
   }
   body {
-    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     margin: 0;
   }
 
@@ -25,6 +24,14 @@ const GlobalStyle = createGlobalStyle`
     background: none;
     border: none;
     outline: none;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .flex-one {
+    flex: 1;
   }
   
 `

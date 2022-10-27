@@ -1,4 +1,6 @@
 import { useRef } from 'react'
+import './app.css'
+import 'antd/dist/antd.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from '@src/pages/Home'
 import Login from '@src/pages/Login'
@@ -44,8 +46,8 @@ function App() {
       defaultOptions: {
         queries: {
           retry: 0,
-          suspense: true,
           staleTime: 1000 * 5,
+          refetchOnWindowFocus: false,
         },
       },
     }),
