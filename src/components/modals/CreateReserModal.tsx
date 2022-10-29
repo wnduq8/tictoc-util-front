@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { CenterPopup, Checkbox, Space, Input, TextArea, Button, DotLoading } from 'antd-mobile'
 import { message } from 'antd'
+import { StyledCenterWrap } from './StyledComponens'
 import { useCreateReserModalState, useResetCreateReserModalState } from '@src/atoms/reservationState'
-import styled from 'styled-components'
 import moment from 'moment'
 import { useCreateReserMutation } from '@hooks/mutation/useReservationMutation'
 import { timeFormat } from '@lib/constants'
@@ -11,21 +11,21 @@ import { useReservation } from '@hooks/useReservation'
 function CreateReserModal() {
   const [checkboxValue, setCheckboxValue] = useState<number>(0)
   const [createModalState, setCreateModalState] = useCreateReserModalState()
-  const onResetCreateModal = useResetCreateReserModalState()
+  const onResetModal = useResetCreateReserModalState()
   const { refetchReservationList } = useReservation()
   const { open, data } = createModalState
   const { name, desc, roomName, roomFloor, headCountString, roomId, reservationDate, startTime, usageTimeLength } = data
 
   const { mutateAsync: createReservation, isLoading } = useCreateReserMutation({
     onSuccess() {
-      message.success('회의실 예약이 완료되었습니다!')
+      message.success('회의실 예약이 완료되었습니다.')
       refetchReservationList()
-      onResetCreateModal()
+      onResetModal()
     },
     onError() {
-      message.error('해당 시간에 회의실이 예약되어 있습니다. 다시 확인 하시고 예약해주세요!')
+      message.error('해당 시간에 회의실이 예약되어 있습니다. 다시 확인 하시고 예약해주세요.')
       refetchReservationList()
-      onResetCreateModal()
+      onResetModal()
     },
   })
 
@@ -87,6 +87,7 @@ function CreateReserModal() {
       setCheckboxValue(0)
     }
   }, [open])
+
   return (
     <CenterPopup
       visible={open}
@@ -94,27 +95,27 @@ function CreateReserModal() {
         if (isLoading) {
           return
         }
-        onResetCreateModal()
+        onResetModal()
       }}
     >
       <StyledCenterWrap>
         <div className={'section'}>
-          <div className={'create_reser_title'}>회의실</div>
-          <div className={'create_reser_contents'}>
-            {roomName} ({roomFloor} {headCountString})
+          <div className={'reservation_title'}>회의실</div>
+          <div className={'reservation_contents'}>
+            {roomName} ({roomFloor} | {headCountString})
           </div>
         </div>
         <div className={'section'}>
-          <div className={'create_reser_title'}>예약일시</div>
-          <div className={'create_reser_contents'}>
+          <div className={'reservation_title'}>예약일시</div>
+          <div className={'reservation_contents'}>
             {reservationDate} / 회의 시작시간 {moment(startTime, 'hh:mm').format('HH:mm')}
           </div>
         </div>
         <div className={'section'}>
-          <div className={'create_reser_title'}>
+          <div className={'reservation_title'}>
             사용시간<span>*</span>
           </div>
-          <div className={'create_reser_contents'}>
+          <div className={'reservation_contents'}>
             <Space direction="horizontal" wrap={true}>
               {availableTimeList.map((item) => (
                 <Checkbox
@@ -131,12 +132,13 @@ function CreateReserModal() {
           </div>
         </div>
         <div className={'section'}>
-          <div className={'create_reser_title'}>
+          <div className={'reservation_title'}>
             회의명<span>*</span>
           </div>
-          <div className={'create_reser_contents'}>
+          <div className={'reservation_contents'}>
             <Input
               placeholder="회의명을 입력해주세요."
+              style={{ borderBottom: '1px solid #A0A0A0' }}
               value={name}
               onChange={(val) => onChangeInput('name', val)}
               maxLength={30}
@@ -144,10 +146,11 @@ function CreateReserModal() {
           </div>
         </div>
         <div className={'section'}>
-          <div className={'create_reser_title'}>회의 참고사항</div>
-          <div className={'create_reser_contents'}>
+          <div className={'reservation_title'}>회의 참고사항</div>
+          <div className={'reservation_contents'}>
             <TextArea
               placeholder="참고사항이 있다면 입력해주세요."
+              style={{ borderBottom: '1px solid #A0A0A0' }}
               showCount
               maxLength={300}
               value={desc ?? ''}
@@ -172,39 +175,3 @@ function CreateReserModal() {
 }
 
 export default CreateReserModal
-
-const StyledCenterWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 15px;
-  padding: 10px;
-  max-height: 550px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .section {
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-    .create_reser_title {
-      font-size: 15px;
-      font-weight: 700;
-      color: ${({ theme }) => theme.color.gray5};
-      > span {
-        margin-left: 3px;
-        color: ${({ theme }) => theme.color.secondaryButtonText};
-      }
-    }
-
-    .create_reser_contents {
-      font-size: 13px;
-      font-weight: 400;
-      color: ${({ theme }) => theme.color.gray5};
-    }
-  }
-`

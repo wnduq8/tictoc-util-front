@@ -3,7 +3,7 @@ import TabLayout from '@components/layouts/TabLayout'
 import styled from 'styled-components'
 import { media } from '@lib/styles/media'
 import { Guide, ReservationTableWrap } from '@components/reservation'
-import CreateReserModal from '@components/modals/CreateReserModal'
+import { CreateReserModal, ReservationModal } from '@components/modals'
 
 export default function Home() {
   return (
@@ -13,6 +13,7 @@ export default function Home() {
         <ReservationTableWrap />
       </Content>
       <CreateReserModal />
+      <ReservationModal />
     </StyledTabLayout>
   )
 }

@@ -14,7 +14,17 @@ function ReservationTableWrap() {
     return (
       <StyledDateInputWrap>
         <div className={'date_input_title'}>예약날짜</div>
-        <DatePicker onChange={onChangeDatePicker} value={moment(selectedDate)} format={dateFormat} allowClear={false} />
+        <DatePicker
+          onChange={onChangeDatePicker}
+          value={moment(selectedDate)}
+          format={dateFormat}
+          allowClear={false}
+          disabledDate={(d) =>
+            !d ||
+            d.isSameOrBefore(moment().subtract(2, 'M').format(dateFormat)) ||
+            d.isAfter(moment().add(2, 'M').format(dateFormat))
+          }
+        />
       </StyledDateInputWrap>
     )
   }

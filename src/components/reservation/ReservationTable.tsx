@@ -4,6 +4,8 @@ import { IReservationInfo, useReservation } from '@hooks/useReservation'
 import { media } from '@lib/styles/media'
 import { theme } from '@lib/styles/theme'
 import { SpinLoading } from 'antd-mobile'
+import moment from 'moment'
+import { dateFormat } from '@lib/constants'
 
 function ReservationTable() {
   const {
@@ -24,6 +26,9 @@ function ReservationTable() {
         <SpinLoading style={{ '--size': '48px', margin: '10px auto 0' }} color={'#FCD400'} />
       ) : (
         <>
+          <p className={'reservation_guide_text'}>
+            캘린더를 클릭하시면 예약<b>(금일 ~ {moment().add(2, 'M').format(dateFormat)})</b> 가능합니다.
+          </p>
           <div className={'reservation_table_wrap'}>
             <div className={'reservation_table_box'}>
               <div className={'reservation_table_box_height'}>
@@ -107,6 +112,10 @@ const StyledReservationTable = styled.div`
 
   ${media.mobile} {
     width: 100%;
+  }
+
+  .reservation_guide_text {
+    text-align: center;
   }
 
   .reservation_table_header {
@@ -238,14 +247,10 @@ const StyledReservationCell = styled.div<{ background: string }>`
     left: 0;
     min-width: 40px;
     display: flex;
-    align-items: start;
+    align-items: center;
     justify-content: center;
     border-top: none;
     border-bottom: none;
     cursor: auto;
-    > span {
-      position: absolute;
-      top: -9px;
-    }
   }
 `

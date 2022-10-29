@@ -26,9 +26,12 @@ export const createReserModalState = atom({
   },
 })
 
-export const reserState = atom<IReservationInfo | null>({
-  key: 'reserState',
-  default: null,
+export const reservationModalState = atom<{ open: boolean; data: IReservationInfo | null }>({
+  key: 'reservationModalState',
+  default: {
+    open: false,
+    data: null,
+  },
 })
 
 export function useSelectedDateState() {
@@ -43,10 +46,10 @@ export function useResetCreateReserModalState() {
   return useResetRecoilState(createReserModalState)
 }
 
-export function useReserState() {
-  return useRecoilState(reserState)
+export function useReservationModalState() {
+  return useRecoilState(reservationModalState)
 }
 
-export function useResetReserState() {
-  return useResetRecoilState(reserState)
+export function useResetReservationModalState() {
+  return useResetRecoilState(reservationModalState)
 }

@@ -1,6 +1,6 @@
 import { DatePickerProps } from 'antd'
-import { useCreateReserModalState, useSelectedDateState } from '@src/atoms/reservationState'
-import { useCallback } from 'react'
+import { useCreateReserModalState, useReservationModalState, useSelectedDateState } from '@src/atoms/reservationState'
+import { useCallback, useMemo } from 'react'
 import moment from 'moment'
 import { useUserState } from '@src/atoms/userState'
 import { theme } from '@lib/styles/theme'
@@ -8,9 +8,8 @@ import { ReservationResult } from '@lib/api/reservation/getReservation'
 import { RoomsResult } from '@lib/api/rooms/getRooms'
 import { useRoomsQuery } from '@hooks/query/useRoomsQuery'
 import { useReservationQuery } from '@hooks/query/useReservationQuery'
-import { timeFormat } from '@lib/constants'
-
-const format = 'h:mm'
+import { timeFormat, displayTimeFormat, dateFormat } from '@lib/constants'
+import { Dialog } from 'antd-mobile'
 
 export interface IReservationInfo extends ReservationResult {
   isMe: boolean
@@ -19,7 +18,8 @@ export interface IReservationInfo extends ReservationResult {
 
 export function useReservation() {
   const [selectedDate, setSelectedDate] = useSelectedDateState()
-  const [_, setCreateReserModal] = useCreateReserModalState()
+  const [, setCreateReserModal] = useCreateReserModalState()
+  const [, setReservationModal] = useReservationModalState()
   const [userState] = useUserState()
 
   const { data: rooms, isLoading: isRoomsLoading } = useRoomsQuery('room')
@@ -38,19 +38,29 @@ export function useReservation() {
   }
 
   const onClickReservedCell = (findReservation: IReservationInfo) => {
-    console.log(findReservation)
+    setReservationModal({
+      open: true,
+      data: findReservation,
+    })
   }
 
   const onClickCell = (roomInfo: RoomsResult, time: string, currentReservationList: ReservationResult[]) => {
-    const targetTime = moment(time, format)
+    if (getIsInvalidDate(time)) {
+      Dialog.alert({
+        content: '현재 시간보다 이전 시간은 예약 할 수 없습니다.',
+        confirmText: '확인',
+      })
+      return
+    }
+    const targetTime = moment(time, displayTimeFormat)
     const diffTimeInfo = currentReservationList.reduce((acc, curr) => {
-      if (!acc && moment(curr.startTime, format).isAfter(targetTime)) {
+      if (!acc && moment(curr.startTime, displayTimeFormat).isAfter(targetTime)) {
         acc = curr
       }
       return acc
     }, null as any)
     const availableTimeLength = diffTimeInfo
-      ? getAvailableTimeLength(targetTime, moment(diffTimeInfo.startTime, format))
+      ? getAvailableTimeLength(targetTime, moment(diffTimeInfo.startTime, displayTimeFormat))
       : 4
     setCreateReserModal({
       open: true,
@@ -87,9 +97,9 @@ export function useReservation() {
     if (!targetTime || !beforeTime || !afterTime) {
       return false
     }
-    const target = moment(targetTime, format)
-    const before = moment(beforeTime, format)
-    const after = moment(afterTime, format)
+    const target = moment(targetTime, displayTimeFormat)
+    const before = moment(beforeTime, displayTimeFormat)
+    const after = moment(afterTime, displayTimeFormat)
 
     return target.isBetween(before, after) || before.isSame(target)
   }, [])
@@ -104,6 +114,17 @@ export function useReservation() {
     return theme.light.color.secondaryButtonText
   }, [])
 
+  const getIsInvalidDate = useCallback(
+    (time?: string): boolean => {
+      if (time) {
+        const momentTime = moment(time, displayTimeFormat).format(timeFormat)
+        return moment(`${selectedDate} ${momentTime}`).isBefore(moment())
+      }
+      return moment(selectedDate).isBefore(moment().format(dateFormat))
+    },
+    [selectedDate],
+  )
+
   return {
     onChangeDatePicker,
     timeArray,
@@ -117,5 +138,6 @@ export function useReservation() {
     reservationList,
     isLoading,
     refetchReservationList,
+    getIsInvalidDate,
   }
 }
