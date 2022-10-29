@@ -1,6 +1,6 @@
 import { DatePickerProps } from 'antd'
 import { useCreateReserModalState, useSelectedDateState } from '@src/atoms/reservationState'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import moment from 'moment'
 import { useUserState } from '@src/atoms/userState'
 import { theme } from '@lib/styles/theme'
@@ -8,6 +8,7 @@ import { ReservationResult } from '@lib/api/reservation/getReservation'
 import { RoomsResult } from '@lib/api/rooms/getRooms'
 import { useRoomsQuery } from '@hooks/query/useRoomsQuery'
 import { useReservationQuery } from '@hooks/query/useReservationQuery'
+import { timeFormat } from '@lib/constants'
 
 const format = 'h:mm'
 
@@ -22,7 +23,11 @@ export function useReservation() {
   const [userState] = useUserState()
 
   const { data: rooms, isLoading: isRoomsLoading } = useRoomsQuery('room')
-  const { data: reservation, isLoading: isReservationLoading } = useReservationQuery(selectedDate, { cacheTime: 0 })
+  const {
+    data: reservation,
+    isLoading: isReservationLoading,
+    refetch: refetchReservationList,
+  } = useReservationQuery(selectedDate, { cacheTime: 0 })
 
   const roomList = rooms?.data
   const reservationList = reservation?.data
@@ -53,7 +58,7 @@ export function useReservation() {
         desc: null,
         name: '',
         reservationDate: selectedDate,
-        startTime: moment(time, 'hh:mm').format('HH:mm:ss'),
+        startTime: moment(time, 'hh:mm').format(timeFormat),
         endTime: '',
         usageTimeLength: availableTimeLength,
         roomName: roomInfo.name,
@@ -86,7 +91,7 @@ export function useReservation() {
     const before = moment(beforeTime, format)
     const after = moment(afterTime, format)
 
-    return target.isBetween(before, after) || before.isSame(target) || after.isSame(target)
+    return target.isBetween(before, after) || before.isSame(target)
   }, [])
 
   const getCellColor = useCallback((findReservation: IReservationInfo | null) => {
@@ -111,5 +116,6 @@ export function useReservation() {
     roomList,
     reservationList,
     isLoading,
+    refetchReservationList,
   }
 }

@@ -1,15 +1,33 @@
-import { useCallback, useEffect, useState } from 'react'
-import { CenterPopup, Checkbox, Space, Input, TextArea, Button } from 'antd-mobile'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { CenterPopup, Checkbox, Space, Input, TextArea, Button, DotLoading } from 'antd-mobile'
+import { message } from 'antd'
 import { useCreateReserModalState, useResetCreateReserModalState } from '@src/atoms/reservationState'
 import styled from 'styled-components'
 import moment from 'moment'
+import { useCreateReserMutation } from '@hooks/mutation/useReservationMutation'
+import { timeFormat } from '@lib/constants'
+import { useReservation } from '@hooks/useReservation'
 
 function CreateReserModal() {
   const [checkboxValue, setCheckboxValue] = useState<number>(0)
   const [createModalState, setCreateModalState] = useCreateReserModalState()
   const onResetCreateModal = useResetCreateReserModalState()
+  const { refetchReservationList } = useReservation()
   const { open, data } = createModalState
-  const { roomName, roomFloor, headCountString, roomId, reservationDate, startTime, usageTimeLength } = data
+  const { name, desc, roomName, roomFloor, headCountString, roomId, reservationDate, startTime, usageTimeLength } = data
+
+  const { mutateAsync: createReservation, isLoading } = useCreateReserMutation({
+    onSuccess() {
+      message.success('회의실 예약이 완료되었습니다!')
+      refetchReservationList()
+      onResetCreateModal()
+    },
+    onError() {
+      message.error('해당 시간에 회의실이 예약되어 있습니다. 다시 확인 하시고 예약해주세요!')
+      refetchReservationList()
+      onResetCreateModal()
+    },
+  })
 
   const getAvailableTimeText = useCallback((num: number) => {
     switch (num) {
@@ -35,8 +53,34 @@ function CreateReserModal() {
     return time
   }).flat()
 
-  console.log(data)
-  console.log(availableTimeList)
+  const onChangeInput = useCallback(
+    (key: string, value: string) => {
+      setCreateModalState({
+        open,
+        data: {
+          ...data,
+          [key]: value,
+        },
+      })
+    },
+    [open, data],
+  )
+
+  const onClickReservation = useCallback(async () => {
+    const params = {
+      name,
+      reservationDate,
+      startTime,
+      endTime: moment(startTime, timeFormat).add(checkboxValue, 'h').format(timeFormat),
+      desc: desc || null,
+      roomId: parseInt(roomId, 10),
+    }
+    await createReservation(params)
+  }, [createModalState, checkboxValue, createReservation])
+
+  const disabled = useMemo(() => {
+    return !checkboxValue || !name
+  }, [checkboxValue, name])
 
   useEffect(() => {
     if (!open) {
@@ -44,7 +88,15 @@ function CreateReserModal() {
     }
   }, [open])
   return (
-    <CenterPopup visible={open} onMaskClick={onResetCreateModal}>
+    <CenterPopup
+      visible={open}
+      onMaskClick={() => {
+        if (isLoading) {
+          return
+        }
+        onResetCreateModal()
+      }}
+    >
       <StyledCenterWrap>
         <div className={'section'}>
           <div className={'create_reser_title'}>회의실</div>
@@ -59,16 +111,16 @@ function CreateReserModal() {
           </div>
         </div>
         <div className={'section'}>
-          <div className={'create_reser_title'}>사용시간</div>
+          <div className={'create_reser_title'}>
+            사용시간<span>*</span>
+          </div>
           <div className={'create_reser_contents'}>
             <Space direction="horizontal" wrap={true}>
               {availableTimeList.map((item) => (
                 <Checkbox
                   key={item.value}
                   value={item.value}
-                  onChange={(v) => {
-                    setCheckboxValue(item.value)
-                  }}
+                  onChange={() => setCheckboxValue(item.value)}
                   checked={item.value === checkboxValue}
                   style={{ marginRight: 30 }}
                 >
@@ -79,20 +131,39 @@ function CreateReserModal() {
           </div>
         </div>
         <div className={'section'}>
-          <div className={'create_reser_title'}>회의명</div>
+          <div className={'create_reser_title'}>
+            회의명<span>*</span>
+          </div>
           <div className={'create_reser_contents'}>
-            <Input placeholder="회의명을 입력해주세요." maxLength={30} />
+            <Input
+              placeholder="회의명을 입력해주세요."
+              value={name}
+              onChange={(val) => onChangeInput('name', val)}
+              maxLength={30}
+            />
           </div>
         </div>
         <div className={'section'}>
           <div className={'create_reser_title'}>회의 참고사항</div>
           <div className={'create_reser_contents'}>
-            <TextArea placeholder="참고사항이 있다면 입력해주세요." showCount maxLength={300} />
+            <TextArea
+              placeholder="참고사항이 있다면 입력해주세요."
+              showCount
+              maxLength={300}
+              value={desc ?? ''}
+              onChange={(val) => onChangeInput('desc', val)}
+            />
           </div>
         </div>
         <div>
-          <Button block size="large" style={{ background: '#FCD400' }}>
-            회의실 예약하기
+          <Button
+            block
+            size="large"
+            disabled={disabled || isLoading}
+            style={{ background: '#FCD400' }}
+            onClick={onClickReservation}
+          >
+            {isLoading ? <DotLoading color="black" /> : '회의실 예약하기'}
           </Button>
         </div>
       </StyledCenterWrap>
@@ -124,6 +195,10 @@ const StyledCenterWrap = styled.div`
       font-size: 15px;
       font-weight: 700;
       color: ${({ theme }) => theme.color.gray5};
+      > span {
+        margin-left: 3px;
+        color: ${({ theme }) => theme.color.secondaryButtonText};
+      }
     }
 
     .create_reser_contents {
