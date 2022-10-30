@@ -34,6 +34,7 @@ function UserMenu({ visible, onClose }: Props) {
           <TriangleBorder />
           <Triangle />
           <MenuItem onClick={() => navigate('/setting/account')}>내 계정</MenuItem>
+          <MenuItem onClick={() => navigate('/my-reservation')}>내 회의실 예약 현황</MenuItem>
           <MenuItem onClick={logout}>로그아웃</MenuItem>
         </Block>
       ) : null}
@@ -49,6 +50,7 @@ const Block = styled(motion.div)`
   width: 200px;
   border: 1px solid ${({ theme }) => theme.color.gray0};
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  z-index: 100;
 `
 
 const MenuItem = styled.div`

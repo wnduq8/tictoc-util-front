@@ -11,6 +11,7 @@ function SettingIndex() {
       <Block>
         <ListWrapper>
           <ListItemLink to="/setting/account">내 계정</ListItemLink>
+          <ListItemLink to="/my-reservation">내 회의실 예약 현황</ListItemLink>
           <ListItem onClick={logout}>로그아웃</ListItem>
         </ListWrapper>
       </Block>

@@ -30,6 +30,7 @@ const StyledGuide = styled.div`
   align-items: start;
   flex-direction: column;
   padding-top: 20px;
+  position: relative;
 
   ${media.mobile} {
     align-items: center;

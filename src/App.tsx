@@ -18,6 +18,7 @@ import { useThemeState } from '@src/atoms/themeState'
 import GlobalCenterPopup from '@components/base/GlobalCenterPopup'
 import SettingIndex from '@src/pages/Setting'
 import Account from '@src/pages/Setting/account'
+import MyReservation from '@src/pages/MyReservation'
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       { index: true, element: <Home /> },
+      { path: '/my-reservation', element: <MyReservation /> },
       { path: '/additional-info', element: <AdditionalInfo /> },
       { path: '/setting', element: <SettingIndex /> },
       { path: '/setting/account', element: <Account /> },
