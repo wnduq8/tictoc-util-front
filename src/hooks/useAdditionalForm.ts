@@ -32,7 +32,7 @@ export function useAdditionalForm(onSuccess: Function) {
   const onSubmit = handleSubmit(async (formDataJSON, e) => {
     const params = {
       ...formDataJSON,
-      id: userState?.id!,
+      id: parseInt(userState?.id!, 10),
     }
     await additionalMutate(params)
   })

@@ -7,7 +7,7 @@ export async function createAdditionalInfo(params: CreateAdditionalParams) {
 }
 
 export interface CreateAdditionalParams {
-  id: string
+  id: string | number
   name: string
   department: string
   phone?: string

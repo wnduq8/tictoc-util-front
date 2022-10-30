@@ -19,6 +19,8 @@ import GlobalCenterPopup from '@components/base/GlobalCenterPopup'
 import SettingIndex from '@src/pages/Setting'
 import Account from '@src/pages/Setting/account'
 import MyReservation from '@src/pages/MyReservation'
+import AdminRoot from '@src/pages/Root/AdminRoot'
+import { AdminAccount, AdminReservation } from '@src/pages/Admin'
 
 const router = createBrowserRouter([
   {
@@ -37,6 +39,14 @@ const router = createBrowserRouter([
     path: '/login',
     element: <PublicRoot />,
     children: [{ index: true, element: <Login /> }],
+  },
+  {
+    path: '/admin',
+    element: <AdminRoot />,
+    children: [
+      { index: true, element: <AdminAccount /> },
+      { path: '/admin/reservation', element: <AdminReservation /> },
+    ],
   },
 ])
 

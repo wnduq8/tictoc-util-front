@@ -17,7 +17,7 @@ function MyReservation() {
           {isLoading ? (
             <SpinLoading style={{ '--size': '48px', margin: '10px auto 0' }} color={'#FCD400'} />
           ) : (
-            <Table dataSource={data} columns={columns} />
+            <Table dataSource={data} columns={columns} rowKey={(record) => record.id} />
           )}
         </div>
       </Block>
@@ -35,7 +35,7 @@ const Block = styled.div`
   align-items: center;
 
   .ant-table-cell {
-    padding: 0;
+    padding: 5px;
     text-align: center;
   }
 

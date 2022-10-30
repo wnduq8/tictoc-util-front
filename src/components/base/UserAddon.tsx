@@ -4,7 +4,7 @@ import { User } from '../vectors'
 import Button from '@components/system/Button'
 import UserMenu from '@components/base/UserMenu'
 
-function UserAddon({ username, profileImage }: { username: string; profileImage?: string }) {
+function UserAddon({ username, profileImage, isAdmin }: { username: string; profileImage?: string; isAdmin: boolean }) {
   const [visible, setVisible] = useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -26,7 +26,7 @@ function UserAddon({ username, profileImage }: { username: string; profileImage?
           </Block>
         </Button>
       )}
-      <UserMenu visible={visible} onClose={onClose} />
+      <UserMenu visible={visible} onClose={onClose} isAdmin={isAdmin} />
     </Responsive>
   )
 }

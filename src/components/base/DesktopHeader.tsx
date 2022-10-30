@@ -12,7 +12,11 @@ function DesktopHeader() {
       <HomeLink to="/">
         <StyledLogo />
       </HomeLink>
-      <Content>{userState && <UserAddon username={userState.name} profileImage={userState.profileImage} />}</Content>
+      <Content>
+        {userState && (
+          <UserAddon username={userState.name} profileImage={userState.profileImage} isAdmin={userState.isAdmin} />
+        )}
+      </Content>
     </Block>
   )
 }

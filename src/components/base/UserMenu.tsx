@@ -8,9 +8,11 @@ import { useLogout } from '@hooks/useLogout'
 interface Props {
   visible: boolean
   onClose(e?: Event): void
+  isAdmin: boolean
 }
 
-function UserMenu({ visible, onClose }: Props) {
+function UserMenu({ visible, onClose, isAdmin }: Props) {
+  console.log(isAdmin)
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, (e) => {
     onClose(e)
@@ -35,6 +37,7 @@ function UserMenu({ visible, onClose }: Props) {
           <Triangle />
           <MenuItem onClick={() => navigate('/setting/account')}>내 계정</MenuItem>
           <MenuItem onClick={() => navigate('/my-reservation')}>내 회의실 예약 현황</MenuItem>
+          {isAdmin && <MenuItem onClick={() => navigate('/admin')}>어드민</MenuItem>}
           <MenuItem onClick={logout}>로그아웃</MenuItem>
         </Block>
       ) : null}
