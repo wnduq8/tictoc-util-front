@@ -7,20 +7,22 @@ function AdminMenu() {
 
   const defaultSelectedKeys = location.pathname === '/admin' ? ['account'] : location.pathname.split('/')
 
-  const menuItems = [
+  const items = [
     {
+      label: '계정',
       key: 'account',
       icon: <TeamOutlined />,
-      label: <Link to={'/admin'}>계정</Link>,
+      children: [{ key: 'account-1', label: <Link to={'/admin'}>계정</Link> }],
     },
     {
+      label: '회의실',
       key: 'reservation',
       icon: <CarryOutOutlined />,
-      label: <Link to={'/admin/reservation'}>회의실</Link>,
+      children: [{ key: 'reservation-1', label: <Link to={'/admin/reservation'}>회의실 추가 및 수정</Link> }],
     },
   ]
 
-  return <Menu mode="horizontal" defaultSelectedKeys={defaultSelectedKeys} items={menuItems} />
+  return <Menu mode="horizontal" defaultSelectedKeys={defaultSelectedKeys} items={items} />
 }
 
 export default AdminMenu

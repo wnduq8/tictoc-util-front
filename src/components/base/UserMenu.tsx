@@ -12,7 +12,6 @@ interface Props {
 }
 
 function UserMenu({ visible, onClose, isAdmin }: Props) {
-  console.log(isAdmin)
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, (e) => {
     onClose(e)

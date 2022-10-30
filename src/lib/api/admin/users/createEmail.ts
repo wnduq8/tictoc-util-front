@@ -1,4 +1,4 @@
-import client from '../client'
+import client from '../../client'
 import { CommonResponseType } from '@lib/type'
 
 export async function createEmail(params: EmailAuthParams) {

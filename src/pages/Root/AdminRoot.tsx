@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import { useCheckAdmin } from '@hooks/useCheckAdmin'
-import AdminMenu from '@components/admin/Menu'
+import AdminMenu from '@components/admin/menu'
 import styled from 'styled-components'
 
 export default function AdminRoot() {
