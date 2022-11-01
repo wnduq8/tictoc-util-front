@@ -7,6 +7,6 @@ export async function updateRoom(params: UpdateRoomParams) {
   return response.data
 }
 
-export interface UpdateRoomParams extends Omit<CreateRoomParams, 'status'> {
+export interface UpdateRoomParams extends CreateRoomParams {
   id: string | number
 }

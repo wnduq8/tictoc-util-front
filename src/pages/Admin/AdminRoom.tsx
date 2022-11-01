@@ -1,13 +1,23 @@
 import { useAdminReservation } from '@hooks/admin/useAdminReservation'
-import { Table } from 'antd'
+import { Table, Button, Row, Col } from 'antd'
 import styled from 'styled-components'
 import RoomModal from '@components/admin/modal'
 
 function AdminRoom() {
-  const { data, columns, isRoomLoading, onClickRow } = useAdminReservation()
+  const { data, columns, isRoomLoading, onClickRow, onClickAddRoomBtn } = useAdminReservation()
   return (
     <StyledAdminRoom>
-      <div className={'admin_reservation_title'}>회의실 현황</div>
+      <Row>
+        <Col span={8} />
+        <Col className={'admin_reservation_title'} span={8}>
+          회의실 현황
+        </Col>
+        <Col className={'admin_reservation_title'} span={8}>
+          <Button type={'primary'} onClick={onClickAddRoomBtn}>
+            회의실 추가
+          </Button>
+        </Col>
+      </Row>
       <Table
         columns={columns}
         dataSource={data}
@@ -26,7 +36,7 @@ function AdminRoom() {
 
 export default AdminRoom
 
-const StyledAdminRoom = styled.div`
+export const StyledAdminRoom = styled.div`
   .admin_reservation_title {
     display: flex;
     align-items: center;

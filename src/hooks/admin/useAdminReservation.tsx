@@ -1,10 +1,10 @@
-import { useAdminRoomsQuery } from '@hooks/query/admin/useAdminRoomsQuery'
+import { useAdminRoomsQuery } from '@hooks/admin/query/useAdminRoomsQuery'
 import { useCallback, useMemo } from 'react'
 import { RoomsResult } from '@lib/api/rooms/getRooms'
 import { useRoomModalState } from '@src/atoms/admin/roomModalState'
 
 export function useAdminReservation() {
-  const { data: roomList, isLoading: isRoomLoading } = useAdminRoomsQuery('adminRooms')
+  const { data: roomList, isLoading: isRoomLoading } = useAdminRoomsQuery('adminRooms', { cacheTime: 0 })
   const [_, setRoomModal] = useRoomModalState()
 
   const columns = useMemo(() => {
@@ -53,6 +53,25 @@ export function useAdminReservation() {
     ]
   }, [])
 
+  const onClickAddRoomBtn = useCallback(() => {
+    setRoomModal({
+      open: true,
+      data: {
+        name: '',
+        floor: '',
+        minHeadCount: 0,
+        maxHeadCount: 0,
+        displayOrder: 0,
+        status: 'A',
+        type: 'create',
+        id: '',
+        createAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: new Date(),
+      },
+    })
+  }, [])
+
   const onClickRow = useCallback((record: RoomsResult) => {
     setRoomModal({
       open: true,
@@ -60,5 +79,5 @@ export function useAdminReservation() {
     })
   }, [])
 
-  return { data: roomList?.data ?? [], columns, isRoomLoading, onClickRow }
+  return { data: roomList?.data ?? [], columns, isRoomLoading, onClickRow, onClickAddRoomBtn }
 }

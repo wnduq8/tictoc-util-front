@@ -168,10 +168,12 @@ const StyledReservationTable = styled.div`
 
     .reservation_table_box {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      ${media.mobile} {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
 
       .reservation_table_box_height {
         flex: 1;
