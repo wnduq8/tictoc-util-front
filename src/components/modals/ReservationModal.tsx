@@ -17,11 +17,13 @@ function ReservationModal() {
       message.success('회의실 예약이 삭제되었습니다.')
       await refetchReservationList()
       onResetModal()
+      Dialog.clear()
     },
     async onError() {
       message.error('회의실 예약 삭제가 실패했습니다. 관리자에게 문의해주세요.')
       await refetchReservationList()
       onResetModal()
+      Dialog.clear()
     },
   })
 
