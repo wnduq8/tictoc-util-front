@@ -23,7 +23,6 @@ function GoogleLoginButton({ setIsGoogleLoading }: GoogleLoginButtonProps) {
     },
   })
 
-  console.log(isLoading)
   const onSuccess = async (res: any) => {
     await googleLoginMutate(res.credential)
   }
