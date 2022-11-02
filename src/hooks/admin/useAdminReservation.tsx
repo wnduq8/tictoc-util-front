@@ -4,7 +4,7 @@ import { RoomsResult } from '@lib/api/rooms/getRooms'
 import { useRoomModalState } from '@src/atoms/admin/roomModalState'
 
 export function useAdminReservation() {
-  const { data: roomList, isLoading: isRoomLoading } = useAdminRoomsQuery('adminRooms', { cacheTime: 0 })
+  const { data: roomList, isFetching: isRoomLoading } = useAdminRoomsQuery('adminRooms', { cacheTime: 0 })
   const [_, setRoomModal] = useRoomModalState()
 
   const columns = useMemo(() => {

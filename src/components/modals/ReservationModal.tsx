@@ -13,14 +13,14 @@ function ReservationModal() {
   const onResetModal = useResetReservationModalState()
   const { refetchReservationList, getIsInvalidDate } = useReservation()
   const { mutateAsync: deleteReservation, isLoading } = useDeleteReserMutation({
-    onSuccess() {
+    async onSuccess() {
       message.success('회의실 예약이 삭제되었습니다.')
-      refetchReservationList()
+      await refetchReservationList()
       onResetModal()
     },
-    onError() {
+    async onError() {
       message.error('회의실 예약 삭제가 실패했습니다. 관리자에게 문의해주세요.')
-      refetchReservationList()
+      await refetchReservationList()
       onResetModal()
     },
   })
@@ -37,8 +37,8 @@ function ReservationModal() {
       content: '해당 예약을 삭제하시겠습니까?',
       cancelText: <span style={{ fontSize: 15, fontWeight: 400 }}>취소</span>,
       confirmText: <span style={{ fontSize: 15, fontWeight: 400 }}>삭제</span>,
-      onConfirm: () => {
-        deleteReservation(parseInt(data?.id))
+      onConfirm: async () => {
+        await deleteReservation(parseInt(data?.id))
       },
     })
   }, [data?.id])
@@ -89,7 +89,7 @@ function ReservationModal() {
             <Button
               block
               size="large"
-              disabled={isLoading || getIsInvalidDate()}
+              disabled={isLoading || getIsInvalidDate(data.time)}
               style={{ background: '#ff7a2a' }}
               onClick={onClickDeleteBtn}
             >

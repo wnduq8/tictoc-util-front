@@ -17,14 +17,14 @@ function CreateReserModal() {
   const { name, desc, roomName, roomFloor, headCountString, roomId, reservationDate, startTime, usageTimeLength } = data
 
   const { mutateAsync: createReservation, isLoading } = useCreateReserMutation({
-    onSuccess() {
+    async onSuccess() {
       message.success('회의실 예약이 완료되었습니다.')
-      refetchReservationList()
+      await refetchReservationList()
       onResetModal()
     },
-    onError() {
+    async onError() {
       message.error('해당 시간에 회의실이 예약되어 있습니다. 다시 확인 하시고 예약해주세요.')
-      refetchReservationList()
+      await refetchReservationList()
       onResetModal()
     },
   })
@@ -89,15 +89,7 @@ function CreateReserModal() {
   }, [open])
 
   return (
-    <CenterPopup
-      visible={open}
-      onMaskClick={() => {
-        if (isLoading) {
-          return
-        }
-        onResetModal()
-      }}
-    >
+    <CenterPopup showCloseButton onClose={onResetModal} visible={open}>
       <StyledCenterWrap>
         <div className={'section'}>
           <div className={'reservation_title'}>회의실</div>

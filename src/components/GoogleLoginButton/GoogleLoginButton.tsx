@@ -3,20 +3,27 @@ import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import { useGoogleMutation } from '@hooks/mutation/useGoogleMutation'
 import { ActionErrorMessage } from '@components/auth/StylesComponents'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { JWT_NAME } from '@lib/constants'
 
-export type GoogleLoginButtonProps = {}
+export type GoogleLoginButtonProps = {
+  setIsGoogleLoading: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-function GoogleLoginButton({}: GoogleLoginButtonProps) {
+function GoogleLoginButton({ setIsGoogleLoading }: GoogleLoginButtonProps) {
   const navigate = useNavigate()
-  const { mutateAsync: googleLoginMutate, isError } = useGoogleMutation({
+  const {
+    mutateAsync: googleLoginMutate,
+    isError,
+    isLoading,
+  } = useGoogleMutation({
     onSuccess(data) {
       Cookies.set(JWT_NAME, data.data.token)
       navigate('/')
     },
   })
 
+  console.log(isLoading)
   const onSuccess = async (res: any) => {
     await googleLoginMutate(res.credential)
   }
@@ -24,6 +31,10 @@ function GoogleLoginButton({}: GoogleLoginButtonProps) {
   const onError = () => {
     alert('구글 로그인 오류')
   }
+
+  useEffect(() => {
+    setIsGoogleLoading(isLoading)
+  }, [isLoading])
 
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID ?? ''}>

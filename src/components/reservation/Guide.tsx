@@ -14,9 +14,6 @@ function Guide() {
         <div>
           <div>-</div> 캘린더에 원하는 시작시간을 클릭하시면 예약이 가능합니다.
         </div>
-        <div>
-          <div>-</div> 예약취소는 시작시간 <span>10분전까지</span> 가능합니다.
-        </div>
       </div>
     </StyledGuide>
   )

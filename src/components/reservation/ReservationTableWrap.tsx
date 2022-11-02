@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { media } from '@lib/styles/media'
 import { DatePicker } from 'antd'
@@ -10,7 +10,7 @@ import ReservationTable from '@components/reservation/ReservationTable'
 function ReservationTableWrap() {
   const { onChangeDatePicker, selectedDate } = useReservation()
 
-  const DateInputWrap = () => {
+  const DateInputWrap = useCallback(() => {
     return (
       <StyledDateInputWrap>
         <div className={'date_input_title'}>예약날짜</div>
@@ -19,15 +19,17 @@ function ReservationTableWrap() {
           value={moment(selectedDate)}
           format={dateFormat}
           allowClear={false}
-          disabledDate={(d) =>
-            !d ||
-            d.isSameOrBefore(moment().subtract(2, 'M').format(dateFormat)) ||
-            d.isAfter(moment().add(2, 'M').format(dateFormat))
-          }
+          disabledDate={(d) => {
+            return (
+              !d ||
+              d.isSameOrBefore(moment().subtract(2, 'M').format(dateFormat)) ||
+              d.isAfter(moment().add(2, 'M').format(dateFormat))
+            )
+          }}
         />
       </StyledDateInputWrap>
     )
-  }
+  }, [selectedDate])
 
   return (
     <StyledReservationTableWrap>

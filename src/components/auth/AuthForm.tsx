@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Logo } from '@components/vectors'
 import LabelInput from '@components/system/LabelInput'
 import Button from '@components/system/Button'
@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEmailMutation } from '@hooks/mutation/useEmailMutation'
 import Cookies from 'js-cookie'
 import { JWT_NAME } from '@lib/constants'
+import { SpinLoading } from 'antd-mobile'
 
 interface AuthFormProps {}
 
@@ -29,10 +30,11 @@ const authDescriptions = {
 } as const
 
 function AuthForm({}: AuthFormProps) {
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const {
     mutateAsync: loginMutate,
-    isLoading,
+    isLoading: isEmailLoading,
     isError,
   } = useEmailMutation({
     onSuccess(data) {
@@ -65,37 +67,46 @@ function AuthForm({}: AuthFormProps) {
 
     await loginMutate(params)
   })
+
+  const isLoading = isGoogleLoading || isEmailLoading
+
   return (
     <StyledForm method="post" onSubmit={onSubmit}>
       <DesktopLogo>
         <Logo />
       </DesktopLogo>
-      <InputGroup>
-        <LabelInput
-          label="이메일"
-          placeholder={emailPlaceholder}
-          disabled={isLoading}
-          errorMessage={errors.tictocEmail}
-          {...inputProps.tictocEmail}
-        />
-        <LabelInput
-          label="비밀번호"
-          name="password"
-          placeholder={passwordPlaceholder}
-          disabled={isLoading}
-          type="password"
-          errorMessage={errors.password}
-          {...inputProps.password}
-        />
-      </InputGroup>
-      <ActionsBox>
-        {isError && <ActionErrorMessage>잘못된 계정 정보입니다.</ActionErrorMessage>}
-        <Button type="submit" layoutMode="fullWidth" disabled={isLoading}>
-          {buttonText}
-        </Button>
-        <Line />
-        <GoogleLoginButton />
-      </ActionsBox>
+      {isLoading ? (
+        <SpinLoading style={{ '--size': '48px', margin: '100px auto 0' }} color={'#FCD400'} />
+      ) : (
+        <>
+          <InputGroup>
+            <LabelInput
+              label="이메일"
+              placeholder={emailPlaceholder}
+              disabled={isEmailLoading}
+              errorMessage={errors.tictocEmail}
+              {...inputProps.tictocEmail}
+            />
+            <LabelInput
+              label="비밀번호"
+              name="password"
+              placeholder={passwordPlaceholder}
+              disabled={isEmailLoading}
+              type="password"
+              errorMessage={errors.password}
+              {...inputProps.password}
+            />
+          </InputGroup>
+          <ActionsBox>
+            {isError && <ActionErrorMessage>잘못된 계정 정보입니다.</ActionErrorMessage>}
+            <Button type="submit" layoutMode="fullWidth" disabled={isEmailLoading}>
+              {buttonText}
+            </Button>
+            <Line />
+            <GoogleLoginButton setIsGoogleLoading={setIsGoogleLoading} />
+          </ActionsBox>
+        </>
+      )}
     </StyledForm>
   )
 }

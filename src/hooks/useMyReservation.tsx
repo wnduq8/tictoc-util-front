@@ -7,8 +7,8 @@ import { displayTimeFormat, timeFormat } from '@lib/constants'
 
 export function useMyReservation() {
   const [userState] = useUserState()
-  const { data: roomList, isLoading: isRoomListLoading } = useRoomsQuery('room')
-  const { data: reservationList, isLoading: isReservationListLoading } = useReservationByUserQuery(userState?.id!)
+  const { data: roomList, isFetching: isRoomListLoading } = useRoomsQuery('room')
+  const { data: reservationList, isFetching: isReservationListLoading } = useReservationByUserQuery(userState?.id!)
 
   const columns = useMemo(() => {
     return [

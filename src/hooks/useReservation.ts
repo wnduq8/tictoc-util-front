@@ -1,6 +1,6 @@
 import { DatePickerProps } from 'antd'
 import { useCreateReserModalState, useReservationModalState, useSelectedDateState } from '@src/atoms/reservationState'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import moment from 'moment'
 import { useUserState } from '@src/atoms/userState'
 import { theme } from '@lib/styles/theme'
@@ -8,7 +8,7 @@ import { ReservationResult } from '@lib/api/reservation/getReservation'
 import { RoomsResult } from '@lib/api/rooms/getRooms'
 import { useRoomsQuery } from '@hooks/query/useRoomsQuery'
 import { useReservationQuery } from '@hooks/query/useReservationQuery'
-import { timeFormat, displayTimeFormat, dateFormat } from '@lib/constants'
+import { timeFormat, displayTimeFormat } from '@lib/constants'
 import { Dialog } from 'antd-mobile'
 
 export interface IReservationInfo extends ReservationResult {
@@ -22,10 +22,10 @@ export function useReservation() {
   const [, setReservationModal] = useReservationModalState()
   const [userState] = useUserState()
 
-  const { data: rooms, isLoading: isRoomsLoading } = useRoomsQuery('room')
+  const { data: rooms, isFetching: isRoomsLoading } = useRoomsQuery('room')
   const {
     data: reservation,
-    isLoading: isReservationLoading,
+    isFetching: isReservationLoading,
     refetch: refetchReservationList,
   } = useReservationQuery(selectedDate, { cacheTime: 0 })
 
@@ -37,10 +37,10 @@ export function useReservation() {
     setSelectedDate(valueString)
   }
 
-  const onClickReservedCell = (findReservation: IReservationInfo) => {
+  const onClickReservedCell = (findReservation: IReservationInfo, time: string) => {
     setReservationModal({
       open: true,
-      data: findReservation,
+      data: { ...findReservation, time },
     })
   }
 
@@ -115,12 +115,9 @@ export function useReservation() {
   }, [])
 
   const getIsInvalidDate = useCallback(
-    (time?: string): boolean => {
-      if (time) {
-        const momentTime = moment(time, displayTimeFormat).format(timeFormat)
-        return moment(`${selectedDate} ${momentTime}`).isBefore(moment())
-      }
-      return moment(selectedDate).isBefore(moment().format(dateFormat))
+    (time: string): boolean => {
+      const momentTime = moment(time, displayTimeFormat).format(timeFormat)
+      return moment(`${selectedDate} ${momentTime}`).isBefore(moment())
     },
     [selectedDate],
   )

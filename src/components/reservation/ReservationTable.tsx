@@ -45,10 +45,11 @@ function ReservationTable() {
                   </div>
                 </div>
                 {timeArray.map((time, idx) => {
+                  const isLast = idx === timeArray.length - 1
                   const isShowText = idx % 2 === 0
                   return (
                     <div className={'table_box_item'} key={String(`${idx}${new Date().getTime()}`)}>
-                      <StyledReservationCell background={theme.light.color.background}>
+                      <StyledReservationCell background={theme.light.color.background} isLast={isLast}>
                         {isShowText ? <span>{time}</span> : ''}
                       </StyledReservationCell>
                       {roomList?.map((roomInfo) => {
@@ -67,7 +68,7 @@ function ReservationTable() {
                             key={roomInfo.id}
                             onClick={() => {
                               if (findReservation) {
-                                onClickReservedCell(findReservation)
+                                onClickReservedCell(findReservation, time)
                               } else {
                                 onClickCell(roomInfo, time, currentReservationList)
                               }
@@ -237,12 +238,13 @@ const StyledReservationTable = styled.div`
   }
 `
 
-const StyledReservationCell = styled.div<{ background: string }>`
+const StyledReservationCell = styled.div<{ background: string; isLast?: boolean }>`
   min-width: 100px;
   border: 1px solid ${({ theme }) => theme.color.gray3};
   height: 30px;
   cursor: pointer;
   background: ${({ background }) => background};
+  ${({ isLast, theme }) => isLast && `border-bottom: 1px solid ${theme.color.gray3} !important;`}
 
   &:first-of-type {
     position: sticky;
