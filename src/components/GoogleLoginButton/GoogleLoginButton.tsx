@@ -3,23 +3,27 @@ import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import { useGoogleMutation } from '@hooks/mutation/useGoogleMutation'
 import { ActionErrorMessage } from '@components/auth/StylesComponents'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { JWT_NAME } from '@lib/constants'
 
 export type GoogleLoginButtonProps = {
   setIsGoogleLoading: React.Dispatch<React.SetStateAction<boolean>>
+  isGoogleError: boolean
+  setIsGoogleError: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function GoogleLoginButton({ setIsGoogleLoading }: GoogleLoginButtonProps) {
+function GoogleLoginButton({ setIsGoogleLoading, isGoogleError, setIsGoogleError }: GoogleLoginButtonProps) {
   const navigate = useNavigate()
-  const {
-    mutateAsync: googleLoginMutate,
-    isError,
-    isLoading,
-  } = useGoogleMutation({
+  const { mutateAsync: googleLoginMutate, isLoading } = useGoogleMutation({
     onSuccess(data) {
+      setIsGoogleError(false)
+      setIsGoogleLoading(false)
       Cookies.set(JWT_NAME, data.data.token)
       navigate('/')
+    },
+    onError() {
+      setIsGoogleError(true)
+      setIsGoogleLoading(false)
     },
   })
 
@@ -37,7 +41,7 @@ function GoogleLoginButton({ setIsGoogleLoading }: GoogleLoginButtonProps) {
 
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID ?? ''}>
-      {isError && <ActionErrorMessage>잘못된 계정 정보입니다.</ActionErrorMessage>}
+      {isGoogleError && <ActionErrorMessage>잘못된 계정 정보입니다.</ActionErrorMessage>}
       <GoogleLogin onSuccess={onSuccess} onError={onError} theme={'filled_blue'} type={'standard'} />
     </GoogleOAuthProvider>
   )

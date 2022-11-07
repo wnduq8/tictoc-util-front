@@ -31,6 +31,7 @@ const authDescriptions = {
 
 function AuthForm({}: AuthFormProps) {
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false)
+  const [isGoogleError, setIsGoogleError] = useState<boolean>(false)
   const navigate = useNavigate()
   const {
     mutateAsync: loginMutate,
@@ -103,7 +104,11 @@ function AuthForm({}: AuthFormProps) {
               {buttonText}
             </Button>
             <Line />
-            <GoogleLoginButton setIsGoogleLoading={setIsGoogleLoading} />
+            <GoogleLoginButton
+              setIsGoogleLoading={setIsGoogleLoading}
+              setIsGoogleError={setIsGoogleError}
+              isGoogleError={isGoogleError}
+            />
           </ActionsBox>
         </>
       )}
