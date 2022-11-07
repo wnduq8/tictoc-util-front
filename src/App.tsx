@@ -20,7 +20,7 @@ import SettingIndex from '@src/pages/Setting'
 import Account from '@src/pages/Setting/account'
 import MyReservation from '@src/pages/MyReservation'
 import AdminRoot from '@src/pages/Root/AdminRoot'
-import { AdminAccount, AdminRoom } from '@src/pages/Admin'
+import { AdminAccount, AdminRoom, AdminUsers } from '@src/pages/Admin'
 
 const router = createBrowserRouter([
   {
@@ -45,6 +45,7 @@ const router = createBrowserRouter([
     element: <AdminRoot />,
     children: [
       { index: true, element: <AdminAccount /> },
+      { path: '/admin/users', element: <AdminUsers /> },
       { path: '/admin/reservation', element: <AdminRoom /> },
     ],
   },

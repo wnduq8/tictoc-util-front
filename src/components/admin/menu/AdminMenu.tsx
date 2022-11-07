@@ -12,7 +12,10 @@ function AdminMenu() {
       label: '계정',
       key: 'account',
       icon: <TeamOutlined />,
-      children: [{ key: 'account-1', label: <Link to={'/admin'}>계정</Link> }],
+      children: [
+        { key: 'account-1', label: <Link to={'/admin'}>계정</Link> },
+        { key: 'account-2', label: <Link to={'/admin/users'}>회원 정보 조회</Link> },
+      ],
     },
     {
       label: '회의실',
