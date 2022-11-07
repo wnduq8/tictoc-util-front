@@ -1,14 +1,20 @@
-import { useUserState } from '@src/atoms/userState'
 import { useRoomsQuery } from '@hooks/query/useRoomsQuery'
 import { useReservationByUserQuery } from '@hooks/query/useReservationByUserQuery'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import moment from 'moment'
 import { displayTimeFormat, timeFormat } from '@lib/constants'
 
+const LIMIT = 10
+
 export function useMyReservation() {
-  const [userState] = useUserState()
+  const [offset, setOffset] = useState<number>(1)
   const { data: roomList, isFetching: isRoomListLoading } = useRoomsQuery('room')
-  const { data: reservationList, isFetching: isReservationListLoading } = useReservationByUserQuery(userState?.id!)
+  const { data: reservationList, isFetching: isReservationListLoading } = useReservationByUserQuery(
+    { offset, limit: LIMIT },
+    {
+      cacheTime: 0,
+    },
+  )
 
   const columns = useMemo(() => {
     return [
@@ -47,7 +53,7 @@ export function useMyReservation() {
   }, [])
 
   const data = useMemo(() => {
-    return reservationList?.data?.Reservations?.map((list) => {
+    return reservationList?.data?.data?.Reservations?.map((list) => {
       return {
         id: list.id,
         roomName: roomList?.data?.find(({ id }) => id === list.roomId)?.name,
@@ -61,7 +67,9 @@ export function useMyReservation() {
     })
   }, [reservationList, roomList])
 
+  const totalCount = useMemo(() => reservationList?.data.totalCount, [reservationList])
+
   const isLoading = isRoomListLoading || isReservationListLoading
 
-  return { isLoading, data, columns }
+  return { isLoading, data, columns, totalCount, LIMIT, setOffset }
 }

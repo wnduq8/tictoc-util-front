@@ -4,21 +4,28 @@ import styled from 'styled-components'
 import { media } from '@lib/styles/media'
 import { Table } from 'antd'
 import { useMyReservation } from '@hooks/useMyReservation'
-import { SpinLoading } from 'antd-mobile'
 
 function MyReservation() {
-  const { isLoading, data, columns } = useMyReservation()
+  const { isLoading, data, columns, totalCount, LIMIT, setOffset } = useMyReservation()
 
   return (
     <BasicLayout hasBackButton>
       <Block>
         <div className={'my_reservation_title'}>나의 예약 현황</div>
         <div className={'my_reservation_table'}>
-          {isLoading ? (
-            <SpinLoading style={{ '--size': '48px', margin: '10px auto 0' }} color={'#FCD400'} />
-          ) : (
-            <Table dataSource={data} columns={columns} rowKey={(record) => record.id} />
-          )}
+          <Table
+            loading={isLoading}
+            dataSource={data}
+            columns={columns}
+            pagination={{
+              total: totalCount ?? 0,
+              pageSize: LIMIT,
+              onChange: (pagination) => {
+                setOffset(pagination === 1 ? pagination : (pagination - 1) * LIMIT + 1)
+              },
+            }}
+            rowKey={(record) => record.id}
+          />
         </div>
       </Block>
     </BasicLayout>
@@ -35,6 +42,7 @@ const Block = styled.div`
   align-items: center;
 
   .ant-table-cell {
+    word-break: break-all;
     padding: 5px;
     text-align: center;
   }
@@ -47,6 +55,7 @@ const Block = styled.div`
     flex: initial;
     margin-top: 96px;
     .ant-table-cell {
+      min-width: 100px;
       padding: 16px;
     }
   }

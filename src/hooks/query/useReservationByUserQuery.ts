@@ -3,12 +3,12 @@ import { type UseQueryOptionsOf } from '@lib/type'
 import { getReservationByUser } from '@lib/api/reservation/getReservationByUser'
 
 export function useReservationByUserQuery(
-  userId: string,
+  { offset, limit }: { offset: number; limit: number },
   options: UseQueryOptionsOf<typeof getReservationByUser> = {},
 ) {
-  return useQuery(extractKey(userId), () => getReservationByUser(), options)
+  return useQuery(extractKey(offset), () => getReservationByUser(offset, limit), options)
 }
 
-const extractKey = (key: string) => ['reservationByUser', key]
+const extractKey = (key: number) => ['reservationByUser', key]
 
 useReservationByUserQuery.extractKey = extractKey
