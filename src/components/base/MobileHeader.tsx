@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
 import { media } from '@lib/styles/media'
 import { Logo } from '../vectors'
 import React from 'react'
@@ -11,10 +12,13 @@ interface Props {
 }
 
 function MobileHeader({ title = <StyledLogo />, headerLeft, headerRight, className }: Props) {
+  const navigate = useNavigate()
   return (
     <Block className={className}>
       {headerLeft && <HeaderSide position="left">{headerLeft}</HeaderSide>}
-      <Title className="title">{title}</Title>
+      <Title className="title" onClick={() => navigate('/')}>
+        {title}
+      </Title>
       {headerRight && <HeaderSide position="right">{headerRight}</HeaderSide>}
     </Block>
   )
@@ -37,7 +41,8 @@ const Block = styled.header`
 const StyledLogo = styled(Logo)`
   display: block;
   width: 84px;
-  height: 17px;
+  height: 100px;
+  cursor: pointer;
 `
 
 const Title = styled.div`

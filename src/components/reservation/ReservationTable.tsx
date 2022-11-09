@@ -73,7 +73,7 @@ function ReservationTable() {
                                 onClickCell(roomInfo, time, currentReservationList)
                               }
                             }}
-                            background={getCellColor(findReservation)}
+                            background={getCellColor(findReservation, time)}
                           />
                         )
                       })}
@@ -90,6 +90,7 @@ function ReservationTable() {
             </div>
             <div>
               <div className={'reservation_impossible'} />
+              <div className={'reservation_impossible_time'} />
               예약불가
             </div>
             <div>
@@ -138,12 +139,11 @@ const StyledReservationTable = styled.div`
       .room_cell {
         display: flex;
         align-items: center;
-        justify-content: flex-start;
-        width: 100px;
-        padding: 0 10px;
+        justify-content: center;
+        overflow: scroll;
+        width: 115px;
         font-size: 15px;
         font-weight: 500;
-        overflow: scroll;
         white-space: nowrap;
         border: 1px solid ${({ theme }) => theme.color.gray3};
         -ms-overflow-style: none; /* IE and Edge */
@@ -214,7 +214,8 @@ const StyledReservationTable = styled.div`
       .reservation_possible {
         width: 20px;
         height: 20px;
-        background: ${({ theme }) => theme.color.gray1};
+        background: ${({ theme }) => theme.color.background};
+        border: 1px solid ${({ theme }) => theme.color.gray1};
         border-radius: 50%;
         margin-right: 10px;
       }
@@ -223,6 +224,14 @@ const StyledReservationTable = styled.div`
         width: 20px;
         height: 20px;
         background: ${({ theme }) => theme.color.secondaryButtonText};
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .reservation_impossible_time {
+        width: 20px;
+        height: 20px;
+        background: ${({ theme }) => theme.color.gray1};
         border-radius: 50%;
         margin-right: 10px;
       }
@@ -239,7 +248,7 @@ const StyledReservationTable = styled.div`
 `
 
 const StyledReservationCell = styled.div<{ background: string; isLast?: boolean }>`
-  min-width: 100px;
+  min-width: 115px;
   border: 1px solid ${({ theme }) => theme.color.gray3};
   height: 30px;
   cursor: pointer;

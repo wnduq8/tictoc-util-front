@@ -1,7 +1,7 @@
 import { useAdminReservation } from '@hooks/admin/useAdminReservation'
 import { Table, Button, Row, Col } from 'antd'
 import styled from 'styled-components'
-import RoomModal from '@components/admin/modal'
+import { RoomModal } from '@components/admin/modal'
 
 function AdminRoom() {
   const { data, columns, isRoomLoading, onClickRow, onClickAddRoomBtn } = useAdminReservation()

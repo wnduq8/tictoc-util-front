@@ -33,9 +33,9 @@ const Block = styled.div`
   }
 `
 
-const StyledLogo = styled(Logo)`
+export const StyledLogo = styled(Logo)`
   display: block;
-  height: 17px;
+  height: 100px;
   width: auto;
 `
 

@@ -25,7 +25,7 @@ export const DesktopLogo = styled.div`
   margin-bottom: 48px;
   svg {
     color: black;
-    height: 32px;
+    height: 100px;
     width: auto;
   }
 `

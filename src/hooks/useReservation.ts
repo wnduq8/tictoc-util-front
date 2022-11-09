@@ -104,22 +104,29 @@ export function useReservation() {
     return target.isBetween(before, after) || before.isSame(target)
   }, [])
 
-  const getCellColor = useCallback((findReservation: IReservationInfo | null) => {
-    if (!findReservation) {
-      return theme.light.color.gray1
-    }
-    if (findReservation.isMe) {
-      return theme.light.color.primary
-    }
-    return theme.light.color.secondaryButtonText
-  }, [])
-
   const getIsInvalidDate = useCallback(
     (time: string): boolean => {
       const momentTime = moment(time, displayTimeFormat).format(timeFormat)
       return moment(`${selectedDate} ${momentTime}`).isBefore(moment())
     },
     [selectedDate],
+  )
+
+  const getCellColor = useCallback(
+    (findReservation: IReservationInfo | null, time: string) => {
+      if (findReservation?.isMe) {
+        return theme.light.color.primary
+      }
+      if (findReservation) {
+        return theme.light.color.secondaryButtonText
+      }
+      if (getIsInvalidDate(time)) {
+        return theme.light.color.gray1
+      }
+
+      return theme.light.color.background
+    },
+    [getIsInvalidDate],
   )
 
   return {

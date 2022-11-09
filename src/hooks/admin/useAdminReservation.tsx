@@ -42,14 +42,6 @@ export function useAdminReservation() {
           return <div>{text === 'A' ? 'O' : 'X'}</div>
         },
       },
-      {
-        key: 'deletedAt',
-        title: '삭제여부',
-        dataIndex: 'deletedAt',
-        render: (deletedAt: string | null) => {
-          return <span style={{ color: 'red' }}>{deletedAt ? '삭제' : ''}</span>
-        },
-      },
     ]
   }, [])
 

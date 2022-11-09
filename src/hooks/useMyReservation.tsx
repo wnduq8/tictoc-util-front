@@ -2,9 +2,7 @@ import { useRoomsQuery } from '@hooks/query/useRoomsQuery'
 import { useReservationByUserQuery } from '@hooks/query/useReservationByUserQuery'
 import { useMemo, useState } from 'react'
 import moment from 'moment'
-import { displayTimeFormat, timeFormat } from '@lib/constants'
-
-const LIMIT = 10
+import { displayTimeFormat, LIMIT, timeFormat } from '@lib/constants'
 
 export function useMyReservation() {
   const [offset, setOffset] = useState<number>(1)
@@ -40,14 +38,6 @@ export function useMyReservation() {
         key: 'reservationDate',
         title: '예약 시간',
         dataIndex: 'reservationDate',
-      },
-      {
-        key: 'deletedAt',
-        title: '취소여부',
-        dataIndex: 'deletedAt',
-        render: (_: any, { isDeleted }: { isDeleted: boolean }) => {
-          return <span style={{ color: 'red' }}>{isDeleted ? '취소' : ''}</span>
-        },
       },
     ]
   }, [])

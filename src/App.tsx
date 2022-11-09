@@ -44,9 +44,9 @@ const router = createBrowserRouter([
     path: '/admin',
     element: <AdminRoot />,
     children: [
-      { index: true, element: <AdminAccount /> },
-      { path: '/admin/users', element: <AdminUsers /> },
-      { path: '/admin/reservation', element: <AdminRoom /> },
+      { index: true, element: <AdminUsers /> },
+      { path: '/admin/account', element: <AdminAccount /> },
+      { path: '/admin/rooms', element: <AdminRoom /> },
     ],
   },
 ])

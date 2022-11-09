@@ -48,6 +48,13 @@ function ReservationModal() {
   return (
     <CenterPopup
       visible={open}
+      showCloseButton={true}
+      onClose={() => {
+        if (isLoading) {
+          return
+        }
+        onResetModal()
+      }}
       onMaskClick={() => {
         if (isLoading) {
           return
